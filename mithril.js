@@ -128,7 +128,7 @@ function execSelector(state, vnode) {
 			: state.attrs.className != null
 				? state.attrs.className
 				: null
-	if (hasClass) attrs.class = null
+	// if (hasClass) attrs.class = null
 	for (var key in attrs) {
 		if (hasOwn.call(attrs, key) && key !== "key") {
 			vnode.attrs = attrs
