@@ -1775,6 +1775,38 @@ var _26 = function($window, mountRedraw00) {
 	}
 	return route
 }
+//sonkwl
+//dynamic loading srcipt/style files
+var dynamicLoading=function(url){
+	if(url.indexOf(".js")>-1){
+		var scripts=document.querySelectorAll("script");
+		for(var i=0;i<scripts.length;i++){
+			if(scripts[i].src.indexOf(url)>-1){
+				//need reload before remove
+				scripts[i].remove();
+			}
+		}
+		var script=document.createElement("script");
+		script.src=url;
+		document.head.append(script);
+	}
+	if(url.indexOf(".css")>-1){
+		var links=document.querySelectorAll("link");
+		for(var i=0;i<links.length;i++){
+			if(links[i].src.indexOf(url)>-1){
+				//need reload before remove
+				links[i].remove();
+			}
+		}
+		var link=document.createElement("link");
+		link.rel="stylesheet";
+		link.href=url;
+		document.head.append(link);
+	}
+	return true;
+} 
+m.dynamicLoading = dynamicLoading
+	
 m.route = _26(typeof window !== "undefined" ? window : null, mountRedraw)
 m.render = render
 m.redraw = mountRedraw.redraw
