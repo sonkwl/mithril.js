@@ -1775,6 +1775,92 @@ var _26 = function($window, mountRedraw00) {
 	}
 	return route
 }
+//sonkwl
+//dynamic loading srcipt/style files
+var dynamicLoading=function(url){
+	if(url.indexOf(".js")>-1){
+		var scripts=document.querySelectorAll("script");
+		for(var i=0;i<scripts.length;i++){
+			if(scripts[i].src.indexOf(url)>-1){
+				//need reload before remove
+				scripts[i].remove();
+			}
+		}
+		var script=document.createElement("script");
+		script.src=url;
+		document.head.append(script);
+	}
+	if(url.indexOf(".css")>-1){
+		var links=document.querySelectorAll("link");
+		for(var i=0;i<links.length;i++){
+			if(links[i].src.indexOf(url)>-1){
+				//need reload before remove
+				links[i].remove();
+			}
+		}
+		var link=document.createElement("link");
+		link.rel="stylesheet";
+		link.href=url;
+		document.head.append(link);
+	}
+	return true;
+} 
+m.dynamicLoading = dynamicLoading
+//sonkwl
+//dynamic loading script/css files at once,callback in last file.
+var DloadingFiles=function(urls,callback){
+	//record countOnloadUrl
+	var countOnloadUrl=urls.length;
+	if(typeof urls=="string" || typeof urls!="object"){
+		console.log("urls is not array.");
+		return;
+	}
+	if(countOnloadUrl==0){
+		callback();
+		return;
+	}
+	for(var i=0;i<urls.length;i++){
+		if(urls[i].indexOf(".js")>-1){
+			var scripts=document.querySelectorAll("script");
+			for(var j=0;j<scripts.length;j++){
+				if(scripts[j].src.indexOf(urls[i])>-1){
+					//need reload before remove
+					scripts[j].remove();
+				}
+			}
+			var script=document.createElement("script");
+			script.src=urls[i];
+			script.onload=function(){
+				countOnloadUrl--;
+				if(countOnloadUrl==0){
+					callback();
+				}
+			}
+			document.head.append(script);
+		}
+		if(urls[i].indexOf(".css")>-1){
+			var links=document.querySelectorAll("link");
+			for(var j=0;j<links.length;j++){
+				if(links[j].href.indexOf(urls[i])>-1){
+					//need reload before remove
+					links[j].remove();
+				}
+			}
+			var link=document.createElement("link");
+			link.rel="stylesheet";
+			link.href=urls[i];
+			link.onload=function(){
+				countOnloadUrl--;
+				if(countOnloadUrl==0){
+					callback();
+				}
+			}
+			document.head.append(link);
+		}
+	}
+}
+m.DloadingFiles=DloadingFiles;
+	
 m.route = _26(typeof window !== "undefined" ? window : null, mountRedraw)
 m.render = render
 m.redraw = mountRedraw.redraw
